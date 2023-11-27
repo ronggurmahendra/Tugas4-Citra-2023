@@ -4,7 +4,6 @@ import numpy as np
 import io
 from PIL import Image
 import os
-# import numpy as np
 from skimage import io
 from skimage.transform import resize
 from sklearn.neighbors import KNeighborsClassifier
@@ -14,11 +13,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-# import tensorflow as tf
-# from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.inception_v3 import InceptionV3
 from tensorflow.keras.applications.inception_v3 import preprocess_input, decode_predictions
-# import numpy as np
 
 def load_images_from_folder(folder):
     images = []
@@ -27,18 +23,10 @@ def load_images_from_folder(folder):
         img_path = os.path.join(folder, filename)
         img = io.imread(img_path)
         img = resize(img, (50, 50))  # resize ke 50 50 
-        images.append(img)  # Keep the image as a 2D array, not flattened
-        labels.append(folder.split("/")[-1])  # Use the folder name as the label
+        images.append(img)  
+        labels.append(folder.split("/")[-1])  
     return np.array(images), np.array(labels)
 
-def load_test_images_from_folder(folder):
-    images = []
-    for filename in os.listdir(folder):
-        img_path = os.path.join(folder, filename)
-        img = io.imread(img_path)
-        img = resize(img, (50, 50))  # Resize the image to a common size
-        images.append(img)  # Keep the image as a 2D array, not flattened
-    return np.array(images)
 
 def main():
     # Make the KNN model 
@@ -89,7 +77,7 @@ def main():
     window = sg.Window("Vehicle classification App Ronggur", layout)
 
     while True:
-        event, values = s.read()
+        event, values = window.read()
 
         if event == sg.WINDOW_CLOSED or event == "Exit":
             break
@@ -140,7 +128,7 @@ def main():
                     stringlabel += true_label_name
 
                     print("Custom Model 1 predicts : ", true_label_name)
-
+                # custom model 2 prediction 
                 elif clasiffy_option == 'Custom Model 2(Full Tuning ResNet50)':
                     
                     img_size = (224, 224)
@@ -157,7 +145,7 @@ def main():
                     stringlabel += true_label_name
 
                     print("Custom Model 2 predicts : ", true_label_name)
-                    
+                # InceptionV3 prediction 
                 elif clasiffy_option == 'Pretrained InceptionV3':
 
                     img = image.load_img(image_path, target_size=(299, 299))
@@ -175,6 +163,7 @@ def main():
                         print(f"{i + 1}: {label} ({score:.2f})")
                         stringlabel += label
 
+                # update label
                 window["-LABEL-ORIGINAL-"].update(stringlabel)
     window.close()
 
